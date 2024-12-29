@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import utilisateur
+from django.contrib.auth import authenticate, login
 
 def accueil(request):
     context = {
@@ -31,3 +32,19 @@ def inscription(request):
             messages.error(request, "Une erreur est survenue. Cet email est peut-être déjà utilisé.")
             return render(request, 'inscription.html')
     return render(request, 'inscription.html')
+
+
+
+
+def login(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("mot_de_passe")
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("accueil.html")  # Remplacez "home" par le nom de l'URL après connexion
+        else:
+            return render(request, "login.html", {"error_message": "Email ou mot de passe incorrect."})
+    return render(request, "login.html")
+
