@@ -37,14 +37,21 @@ def inscription(request):
 
 
 def login(request):
-    if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("mot_de_passe")
+    if request.method == 'POST':
+        email = request.POST.get('email')  # Champ du formulaire pour l'email
+        password = request.POST.get('password')  # Champ du formulaire pour le mot de passe
+
+        # Authentifier l'utilisateur
         user = authenticate(request, username=email, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect("accueil.html")  # Remplacez "home" par le nom de l'URL après connexion
+
+        if user is not None:  # Si les identifiants sont corrects
+            login(request, user)  # Connecter l'utilisateur
+            return redirect('accueil')  # Redirige vers l'URL nommée 'accueil'
         else:
-            return render(request, "login.html", {"error_message": "Email ou mot de passe incorrect."})
-    return render(request, "login.html")
+            # Identifiants invalides
+            return render(request, 'login.html', {'error_message': 'Email ou mot de passe incorrect.'})
+
+    # Afficher le formulaire de connexion pour les requêtes GET
+    return render(request, 'login.html')
+
 
